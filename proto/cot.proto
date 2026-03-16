@@ -1,0 +1,59 @@
+/**
+ * cot.proto — Protocol Buffers schema for the COT-MTA protocol.
+ *
+ * Defines all messages exchanged between Alice (C++ server) and Bob (TypeScript client)
+ * during the 256-round Correlated Oblivious Transfer protocol.
+ *
+ * Wire format: Each message on TCP is prefixed with a 4-byte big-endian uint32 length,
+ * followed by the protobuf-encoded CotMessage bytes.
+ */
+
+syntax = "proto3";
+
+package cot;
+
+enum MessageType {
+  UNKNOWN            = 0;
+  OT_ROUND_INIT      = 1; 
+  OT_ROUND_RESPONSE  = 2;  
+  OT_ENCRYPTED_MSGS  = 3;  
+  SHARE_RESULT       = 4;  
+  ERROR              = 5;  
+}
+
+message CotMessage {
+  MessageType message_type = 1;
+
+  oneof payload {
+    OTRoundInit      ot_round_init      = 2;
+    OTRoundResponse  ot_round_response  = 3;
+    OTEncryptedMsgs  ot_encrypted_msgs  = 4;
+    ShareResult      share_result       = 5;
+    ErrorMsg         error              = 6;
+  }
+}
+
+message OTRoundInit {
+  uint32 round_index = 1;  
+  bytes  point_a     = 2;  
+}
+
+message OTRoundResponse {
+  uint32 round_index = 1;  
+  bytes  point_b     = 2;  
+}
+
+message OTEncryptedMsgs {
+  uint32 round_index = 1;  
+  bytes  e0          = 2;  
+  bytes  e1          = 3;  
+}
+
+message ShareResult {
+  bytes share = 1;  
+}
+
+/** error message if protocol fails. */
+message ErrorMsg {
+  string description = 1;
+}
