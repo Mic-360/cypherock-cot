@@ -11,7 +11,7 @@
     "protobufjs": "^7.4.0"
   },
   "devDependencies": {
-    "typescript": "^5.7.0",
+    "typescript": "^6.0.3",
     "@types/node": "^20.17.0",
     "ts-node": "^10.9.0"
   }
